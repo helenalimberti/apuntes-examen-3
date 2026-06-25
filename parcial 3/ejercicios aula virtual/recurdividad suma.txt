@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+// Declaraci�n de la funci�n recursiva
+int sumaRecursiva(int n) {
+	if (n == 0) {
+		return 0; // Caso base
+	} else {
+		return n + sumaRecursiva(n - 1); // Caso recursivo
+	}
+}
+
+int main() {
+	int numero; // Cambie este valor para probar con otros n�meros
+	int resultado;
+	printf("Ingresa el n�mero de t�rminos a mostrar: ");
+	scanf("%d", &numero);
+	// Validaci�n para evitar n�meros negativos
+	if (numero < 0) {
+		printf("Por favor, ingrese un n�mero entero positivo.\n");
+		return 1;
+	}
+	
+	resultado = sumaRecursiva(numero);
+	
+	printf("La suma de los primeros %d numeros naturales es: %d\n", numero, resultado);
+	
+	return 0;
+}

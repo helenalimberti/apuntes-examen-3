@@ -1,0 +1,120 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Estructura para los nodos del �rbol binario
+struct Nodo {
+	int dato;
+	struct Nodo* izquierdo;
+	struct Nodo* derecho;
+};
+
+// Procedimiento para crear e insertar elementos por teclado
+void crearArbol(struct Nodo** raiz, int valor) {
+	if (*raiz == NULL) {
+		struct Nodo* nuevoNodo = (struct Nodo*)malloc(sizeof(struct Nodo));
+		if (nuevoNodo == NULL) {
+			printf("Error: Memoria insuficiente.\n");
+			return;
+		}
+		nuevoNodo->dato = valor;
+		nuevoNodo->izquierdo = NULL;
+		nuevoNodo->derecho = NULL;
+		*raiz = nuevoNodo;
+		printf("-> Valor %d insertado correctamente.\n", valor);
+		return;
+	}
+	
+	if (valor < (*raiz)->dato) {
+		crearArbol(&((*raiz)->izquierdo), valor);
+	} else if (valor > (*raiz)->dato) {
+		crearArbol(&((*raiz)->derecho), valor);
+	} else {
+		printf("-> El valor %d ya existe en el �rbol.\n", valor);
+	}
+}
+
+// Recorrido Preorden: Ra�z -> Izquierdo -> Derecho
+void preOrden(struct Nodo* raiz) {
+	if (raiz != NULL) {
+		printf("%d ", raiz->dato);
+		preOrden(raiz->izquierdo);
+		preOrden(raiz->derecho);
+	}
+}
+
+// Recorrido Orden Central (Inorden): Izquierdo -> Ra�z -> Derecho
+void ordenCentral(struct Nodo* raiz) {
+	if (raiz != NULL) {
+		ordenCentral(raiz->izquierdo);
+		printf("%d ", raiz->dato);
+		ordenCentral(raiz->derecho);
+	}
+}
+
+// Recorrido Postorden: Izquierdo -> Derecho -> Ra�z
+void postOrden(struct Nodo* raiz) {
+	if (raiz != NULL) {
+		postOrden(raiz->izquierdo);
+		postOrden(raiz->derecho);
+		printf("%d ", raiz->dato);
+	}
+}
+
+// Funci�n principal con men� interactivo simplificado
+int main() {
+	struct Nodo* raiz = NULL;
+	int opcion, valor;
+	
+	do {
+		printf("\n=== MENU ARBOL BINARIO ===");
+		printf("\n1. Insertar elemento por teclado");
+		printf("\n2. Mostrar todos los recorridos por pantalla");
+		printf("\n3. Salir");
+		printf("\nSeleccione una opci�n: ");
+		fflush(stdout);
+		
+		if (scanf("%d", &opcion) != 1) {
+			printf("Error: Ingrese un n�mero v�lido.\n");
+			while (getchar() != '\n'); // Limpiar b�fer
+			continue;
+		}
+		
+		switch (opcion) {
+		case 1:
+			printf("Ingrese el valor entero: ");
+			fflush(stdout);
+			scanf("%d", &valor);
+			crearArbol(&raiz, valor);
+			break;
+			
+		case 2:
+			if (raiz == NULL) {
+				printf("\nEl �rbol est� vac�o. Inserte elementos primero.\n");
+			} else {
+				printf ("\n Recorrido del arbol");
+				
+				printf("\n> Preorden (Ra�z-Izq-Der):       ");
+				preOrden(raiz);
+				
+				printf("\n> Orden Central (Izq-Ra�z-Der):  ");
+				ordenCentral(raiz);
+				
+				printf("\n> Postorden (Izq-Der-Ra�z):      ");
+				postOrden(raiz);
+				
+				printf("\n-----------------------------\n");
+			}
+			fflush(stdout);
+			break;
+			
+		case 3:
+			printf("Saliendo del programa...\n");
+			break;
+			
+		default:
+			printf("Opci�n inv�lida.\n");
+		}
+	} while (opcion != 3);
+	
+	return 0;
+}

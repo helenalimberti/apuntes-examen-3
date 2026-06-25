@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definici�n de la estructura del nodo
+struct Nodo {
+	int dato;
+	struct Nodo* siguiente;
+	struct Nodo* anterior;
+};
+
+// Prototipos de funciones
+void insertarNodo(struct Nodo** inicio);
+void mostrarAdelante(struct Nodo* inicio);
+void mostrarAtras(struct Nodo* inicio);
+
+int main() {
+	struct Nodo* inicio = NULL;
+	int opcion;
+	
+	do {
+		printf("\n--- MENU LISTA DOBLE ---");
+		printf("\n1. Insertar elemento");
+		printf("\n2. Mostrar de adelante hacia atras");
+		printf("\n3. Mostrar de atras hacia adelante");
+		printf("\n4. Salir");
+		printf("\nSeleccione una opcion: ");
+		scanf("%d", &opcion);
+		
+		switch (opcion) {
+		case 1:
+			insertarNodo(&inicio);
+			break;
+		case 2:
+			mostrarAdelante(inicio);
+			break;
+		case 3:
+			mostrarAtras(inicio);
+			break;
+		case 4:
+			printf("Saliendo del programa...\n");
+			break;
+		default:
+			printf("Opcion no valida.\n");
+		}
+	} while (opcion != 4);
+	
+	return 0;
+}
+
+// Procedimiento para crear e insertar nodos (al final de la lista)
+void insertarNodo(struct Nodo** inicio) {
+	struct Nodo* nuevo = (struct Nodo*)malloc(sizeof(struct Nodo));
+	struct Nodo* auxiliar = *inicio;
+	
+	printf("Ingrese el valor numerico: ");
+	scanf("%d", &nuevo->dato);
+	nuevo->siguiente = NULL;
+	
+	if (*inicio == NULL) {
+		nuevo->anterior = NULL;
+		*inicio = nuevo;
+	} else {
+		while (auxiliar->siguiente != NULL) {
+			auxiliar = auxiliar->siguiente;
+		}
+		auxiliar->siguiente = nuevo;
+		nuevo->anterior = auxiliar;
+	}
+	printf("Elemento insertado correctamente.\n");
+}
+
+// Procedimiento para recorrer de adelante hacia atr�s
+void mostrarAdelante(struct Nodo* inicio) {
+	struct Nodo* auxiliar = inicio;
+	if (inicio == NULL) {
+		printf("La lista esta vacia.\n");
+		return;
+	}
+	printf("Lista (Adelante -> Atras): ");
+	while (auxiliar != NULL) {
+		printf("[%d] ", auxiliar->dato);
+		auxiliar = auxiliar->siguiente;
+	}
+	printf("\n");
+}
+
+// Procedimiento para recorrer de atr�s hacia adelante
+void mostrarAtras(struct Nodo* inicio) {
+	struct Nodo* auxiliar = inicio;
+	if (inicio == NULL) {
+		printf("La lista esta vacia.\n");
+		return;
+	}
+	
+	// Primero llegamos al �ltimo nodo
+	while (auxiliar->siguiente != NULL) {
+		auxiliar = auxiliar->siguiente;
+	}
+	
+	// Recorremos hacia atr�s usando el puntero 'anterior'
+	printf("Lista (Atras -> Adelante): ");
+	while (auxiliar != NULL) {
+		printf("[%d] ", auxiliar->dato);
+		auxiliar = auxiliar->anterior;
+	}
+	printf("\n");
+}

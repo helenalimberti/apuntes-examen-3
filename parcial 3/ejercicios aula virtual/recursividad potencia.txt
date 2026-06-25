@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+int potencia(int base, int exponent)
+{
+	if(exponent == 0) // Caso base
+		return 1;
+	else
+		return base * potencia(base, exponent - 1); // Caso recursivo
+}
+
+
+int main()
+{
+	int base, exponent, result;
+	
+	printf("Enter the base: ");
+	scanf("%d", &base);
+	
+	printf("Enter the exponent: ");
+	scanf("%d", &exponent);
+	
+	result = potencia(base, exponent);
+	
+	printf("%d^%d = %d", base, exponent, result);
+	
+	return 0;
+}

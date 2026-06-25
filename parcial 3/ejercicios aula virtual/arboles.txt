@@ -1,0 +1,148 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Estructura para los nodos del �rbol
+struct Nodo {
+	int dato;
+	struct Nodo* izquierdo;
+	struct Nodo* derecho;
+};
+
+// Procedimiento para insertar elementos por teclado
+void crearArbol(struct Nodo** raiz, int valor) {
+	if (*raiz == NULL) {
+		struct Nodo* nuevoNodo = (struct Nodo*)malloc(sizeof(struct Nodo));
+		if (nuevoNodo == NULL) {
+			printf("Error: No hay memoria suficiente.\n");
+			return;
+		}
+		nuevoNodo->dato = valor;
+		nuevoNodo->izquierdo = NULL;
+		nuevoNodo->derecho = NULL;
+		*raiz = nuevoNodo;
+		printf("-> Nodo %d insertado correctamente.\n", valor);
+		return;
+	}
+	
+	if (valor < (*raiz)->dato) {
+		crearArbol(&((*raiz)->izquierdo), valor);
+	} else if (valor > (*raiz)->dato) {
+		crearArbol(&((*raiz)->derecho), valor);
+	} else {
+		printf("-> El valor %d ya existe en el �rbol.\n", valor);
+	}
+}
+
+// Procedimiento corregido para mostrar el �rbol con tabulaciones claras (subniveles)
+void mostrarArbol(struct Nodo* raiz, int nivel) {
+	if (raiz == NULL) {
+		return;
+	}
+	
+	// 1. Procesar primero el hijo derecho (arriba)
+	mostrarArbol(raiz->derecho, nivel + 1);
+	
+	// 2. Imprimir el nodo actual con sangr�a seg�n su nivel
+	printf("\n");
+	for (int i = 0; i < nivel; i++) {
+		printf("\t"); // Usamos tabuladores que son m�s estables que los espacios libres
+	}
+	printf("[%d]", raiz->dato);
+	fflush(stdout); // Fuerza a la consola a mostrar el texto de inmediato
+	
+	// 3. Procesar el hijo izquierdo (abajo)
+	mostrarArbol(raiz->izquierdo, nivel + 1);
+}
+
+// Recorrido Preorden: Ra�z -> Izquierdo -> Derecho
+void preOrden(struct Nodo* raiz) {
+	if (raiz != NULL) {
+		printf("%d ", raiz->dato);
+		preOrden(raiz->izquierdo);
+		preOrden(raiz->derecho);
+	}
+}
+
+// Recorrido Inorden: Izquierdo -> Ra�z -> Derecho
+void inOrden(struct Nodo* raiz) {
+	if (raiz != NULL) {
+		inOrden(raiz->izquierdo);
+		printf("%d ", raiz->dato);
+		inOrden(raiz->derecho);
+	}
+}
+
+// Recorrido Postorden: Izquierdo -> Derecho -> Ra�z
+void postOrden(struct Nodo* raiz) {
+	if (raiz != NULL) {
+		postOrden(raiz->izquierdo);
+		postOrden(raiz->derecho);
+		printf("%d ", raiz->dato);
+	}
+}
+
+// Funci�n principal con el men� interactivo
+int main() {
+	struct Nodo* raiz = NULL;
+	int opcion, valor;
+	
+	do {
+		/*printf("\n\n======= MENU �RBOL BINARIO =======");*/
+		printf("\n1. Insertar elemento (por teclado)");
+		printf("\n2. Mostrar estructura del �rbol");
+		printf("\n3. Recorrido en Preorden");
+		printf("\n4. Recorrido en Inorden");
+		printf("\n5. Recorrido en Postorden");
+		printf("\n6. Salir");
+		printf("\nSeleccione una opci�n: ");
+		fflush(stdout);
+		
+		if (scanf("%d", &opcion) != 1) {
+			printf("Error: Ingrese un n�mero v�lido.\n");
+			while(getchar() != '\n'); // Limpiar el b�fer del teclado en caso de letras
+			continue;
+		}
+		
+		switch (opcion) {
+		case 1:
+			printf("Ingrese el valor entero a insertar: ");
+			fflush(stdout);
+			scanf("%d", &valor);
+			crearArbol(&raiz, valor);
+			break;
+		case 2:
+			if (raiz == NULL) {
+				printf("El �rbol est� vac�o. Inserte elementos primero.\n");
+			} else {
+				printf ("\n");
+				printf("Estructura del arbol.");
+				/*printf ("--- Estructura del �rbol (Gire la cabeza a la izquierda para ver la ra�z) --- ");*/
+				mostrarArbol(raiz, 0);
+				printf("\n-------------------------------------------------------------------------");
+			}
+			break;
+		case 3:
+			{
+			if (raiz == NULL) {printf("\n"); printf ("Arbol vacio");}
+			else { printf("Preorden: "); 
+			       preOrden(raiz); }
+			break;
+			}
+		case 4:
+			if (raiz == NULL) {printf("\n"); printf ("Arbol vacio");}
+			else { printf("Inorden: "); inOrden(raiz); }
+			break;
+		case 5:
+			if (raiz == NULL) {printf("\n"); printf ("Arbol vacio");}
+			else { printf("Postorden: "); postOrden(raiz); }
+			break;
+		case 6:
+			printf("Saliendo del programa...\n");
+			break;
+		default:
+			printf("Opci�n inv�lida. Intente de nuevo.\n");
+		}
+	} while (opcion != 6);
+	
+	return 0;
+}
