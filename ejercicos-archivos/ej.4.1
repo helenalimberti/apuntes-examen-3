@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+	FILE *arch;
+	char nombre[30];
+	char c;
+	int i;
+	
+	// ---------- 1) GENERAR EL ARCHIVO ----------
+	if ((arch = fopen("nombres.txt", "w")) == NULL)
+	{
+		printf("No se pudo crear el archivo\n");
+		exit(1);
+	}
+	
+	for (i = 0; i < 5; i++)
+	{
+		printf("Ingrese nombre %d: ", i + 1);
+		scanf("%s", nombre);          // %s corta en el primer espacio
+		fprintf(arch, "%s.", nombre); // lo escribo seguido de un punto
+	}
+	
+	fclose(arch);
+	
+	// ---------- 2) MOSTRAR EL CONTENIDO ----------
+	if ((arch = fopen("nombres.txt", "r")) == NULL)
+	{
+		printf("No se pudo abrir el archivo\n");
+		exit(1);
+	}
+	
+	printf("\ncontenido del archivo:\n");
+	while ((c = fgetc(arch)) != EOF)
+	{
+		if (c == '.')
+			printf("\n");   // cuando encuentro un punto, salto de línea
+		else
+			printf("%c", c);
+	}
+	
+	fclose(arch);
+	return 0;
+}
