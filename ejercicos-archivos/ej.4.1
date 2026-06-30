@@ -8,7 +8,7 @@ int main()
 	char c;
 	int i;
 	
-	// ---------- 1) GENERAR EL ARCHIVO ----------
+	
 	if ((arch = fopen("nombres.txt", "w")) == NULL)
 	{
 		printf("No se pudo crear el archivo\n");
@@ -24,7 +24,7 @@ int main()
 	
 	fclose(arch);
 	
-	// ---------- 2) MOSTRAR EL CONTENIDO ----------
+
 	if ((arch = fopen("nombres.txt", "r")) == NULL)
 	{
 		printf("No se pudo abrir el archivo\n");
