@@ -11,7 +11,7 @@ struct alumno
     float nota;
 };
 
-// ---------- 1) GENERAR EL ARCHIVO BINARIO ----------
+
 void generarArchivo()
 {
     FILE *arch;
@@ -45,7 +45,7 @@ void generarArchivo()
     fclose(arch);
 }
 
-// ---------- 2) GENERAR EL INFORME ----------
+
 void generarInforme()
 {
     FILE *arch;
@@ -57,7 +57,7 @@ void generarInforme()
     int cantMenor6 = 0;
     float sumaNotas = 0;
     float sumaMenor6 = 0;
-    int primero = 1; // bandera para inicializar masAlta/masBaja con el primer registro
+    int primero = 1; 
 
     if ((arch = fopen(ARCHIVO, "rb")) == NULL)
     {
@@ -70,10 +70,10 @@ void generarInforme()
 
     while (fread(&al, sizeof(al), 1, arch) == 1)
     {
-        // --- listado ---
+    
         printf("%-12ld %-15s %-15s %-6.2f\n", al.dni, al.apellido, al.nombre, al.nota);
 
-        // --- acumuladores ---
+        
         total++;
         sumaNotas += al.nota;
 
@@ -104,7 +104,7 @@ void generarInforme()
 
     if (total == 0)
     {
-        printf("\nNo hay alumnos cargados.\n");
+        printf("No hay alumnos cargados.\n");
         return;
     }
 
