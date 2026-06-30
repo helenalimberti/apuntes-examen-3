@@ -20,16 +20,16 @@ int main()
     if ((arch = fopen(ARCH, "wb")) == NULL)
     {
         printf("No se pudo abrir el archivo\n");
-        exit(1);                 // cortamos si no se pudo abrir
+        exit(1);                 
     }
 
     do
     {
-        printf("\nIngrese numero de cliente: ");
+        printf("Ingrese numero de cliente: ");
         scanf("%d", &reg.cliente);
 
         printf("Ingrese el nombre: ");
-        scanf("%s", reg.nombre);   // sin & porque reg.nombre ya es la dirección del array
+        scanf("%s", reg.nombre);  
 
         printf("Ingrese el saldo: ");
         scanf("%f", &reg.saldo);
@@ -37,12 +37,12 @@ int main()
         fwrite(&reg, sizeof(reg), 1, arch);
 
         printf("Desea terminar s/n: ");
-        scanf(" %c", &seguir);     // espacio antes de %c para "comerse" el enter pendiente
+        scanf(" %c", &seguir);     
 
     } while (seguir == 'n');
 
     fclose(arch);
 
-    printf("\nArchivo generado correctamente.\n");
+    printf("Archivo generado correctamente\n");
     return 0;
 }
