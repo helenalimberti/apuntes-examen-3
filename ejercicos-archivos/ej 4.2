@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define ARCH "c:\\arch.dat"
+
+struct registro
+{
+    int cliente;
+    char nombre[20];
+    float saldo;
+};
+
+int main()
+{
+    FILE *arch;
+    struct registro reg;
+    char seguir;
+
+    if ((arch = fopen(ARCH, "wb")) == NULL)
+    {
+        printf("No se pudo abrir el archivo\n");
+        exit(1);                 // cortamos si no se pudo abrir
+    }
+
+    do
+    {
+        printf("\nIngrese numero de cliente: ");
+        scanf("%d", &reg.cliente);
+
+        printf("Ingrese el nombre: ");
+        scanf("%s", reg.nombre);   // sin & porque reg.nombre ya es la dirección del array
+
+        printf("Ingrese el saldo: ");
+        scanf("%f", &reg.saldo);
+
+        fwrite(&reg, sizeof(reg), 1, arch);
+
+        printf("Desea terminar s/n: ");
+        scanf(" %c", &seguir);     // espacio antes de %c para "comerse" el enter pendiente
+
+    } while (seguir == 'n');
+
+    fclose(arch);
+
+    printf("\nArchivo generado correctamente.\n");
+    return 0;
+}
