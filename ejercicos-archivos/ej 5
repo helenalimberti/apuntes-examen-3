@@ -1,0 +1,157 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define ARCHIVO "alumnos.dat"
+
+struct alumno
+{
+    long dni;
+    char apellido[30];
+    char nombre[30];
+    float nota;
+};
+
+// ---------- 1) GENERAR EL ARCHIVO BINARIO ----------
+void generarArchivo()
+{
+    FILE *arch;
+    struct alumno al;
+    char seguir;
+
+    if ((arch = fopen(ARCHIVO, "wb")) == NULL)
+    {
+        printf("No se pudo crear el archivo\n");
+        exit(1);
+    }
+
+    do
+    {
+        printf("\nIngrese DNI: ");
+        scanf("%ld", &al.dni);
+        printf("Ingrese apellido: ");
+        scanf("%s", al.apellido);
+        printf("Ingrese nombre: ");
+        scanf("%s", al.nombre);
+        printf("Ingrese nota: ");
+        scanf("%f", &al.nota);
+
+        fwrite(&al, sizeof(al), 1, arch);
+
+        printf("Desea cargar otro alumno s/n: ");
+        scanf(" %c", &seguir);
+
+    } while (seguir == 's');
+
+    fclose(arch);
+}
+
+// ---------- 2) GENERAR EL INFORME ----------
+void generarInforme()
+{
+    FILE *arch;
+    struct alumno al;
+    struct alumno masAlta, masBaja;
+
+    int total = 0;
+    int cantMayorIgual6 = 0;
+    int cantMenor6 = 0;
+    float sumaNotas = 0;
+    float sumaMenor6 = 0;
+    int primero = 1; // bandera para inicializar masAlta/masBaja con el primer registro
+
+    if ((arch = fopen(ARCHIVO, "rb")) == NULL)
+    {
+        printf("No se pudo abrir el archivo\n");
+        exit(1);
+    }
+
+    printf("\nListado de Alumnos\n");
+    printf("%-12s %-15s %-15s %-6s\n", "DNI", "Apellido", "Nombre", "Nota");
+
+    while (fread(&al, sizeof(al), 1, arch) == 1)
+    {
+        // --- listado ---
+        printf("%-12ld %-15s %-15s %-6.2f\n", al.dni, al.apellido, al.nombre, al.nota);
+
+        // --- acumuladores ---
+        total++;
+        sumaNotas += al.nota;
+
+        if (primero)
+        {
+            masAlta = al;
+            masBaja = al;
+            primero = 0;
+        }
+        else
+        {
+            if (al.nota > masAlta.nota)
+                masAlta = al;
+            if (al.nota < masBaja.nota)
+                masBaja = al;
+        }
+
+        if (al.nota >= 6)
+            cantMayorIgual6++;
+        else
+        {
+            cantMenor6++;
+            sumaMenor6 += al.nota;
+        }
+    }
+
+    fclose(arch);
+
+    if (total == 0)
+    {
+        printf("\nNo hay alumnos cargados.\n");
+        return;
+    }
+
+    printf("\nTotal de Alumnos: %d\n", total);
+    printf("Alumno con la nota mas alta: %s %s (%.2f)\n", masAlta.apellido, masAlta.nombre, masAlta.nota);
+    printf("Alumno con la nota mas baja: %s %s (%.2f)\n", masBaja.apellido, masBaja.nombre, masBaja.nota);
+    printf("Promedio general de los alumnos: %.2f\n", sumaNotas / total);
+    printf("Cantidad de alumnos con nota >= 6: %d\n", cantMayorIgual6);
+    printf("Cantidad de alumnos con nota < 6: %d\n", cantMenor6);
+    printf("Porcentaje de alumnos con nota >= 6: %.2f%%\n", (cantMayorIgual6 * 100.0) / total);
+
+    if (cantMenor6 > 0)
+        printf("Promedio de alumnos con nota < 6: %.2f\n", sumaMenor6 / cantMenor6);
+    else
+        printf("Promedio de alumnos con nota < 6: no hay alumnos con nota menor a 6\n");
+}
+
+// ---------- MAIN ----------
+int main()
+{
+    int opcion;
+
+    do
+    {
+        printf("\n--- MENU ---\n");
+        printf("1. Cargar alumnos\n");
+        printf("2. Generar informe\n");
+        printf("3. Salir\n");
+        printf("Opcion: ");
+        scanf("%d", &opcion);
+
+        switch (opcion)
+        {
+        case 1:
+            generarArchivo();
+            break;
+        case 2:
+            generarInforme();
+            break;
+        case 3:
+            printf("Saliendo...\n");
+            break;
+        default:
+            printf("Opcion invalida\n");
+        }
+
+    } while (opcion != 3);
+
+    return 0;
+}
